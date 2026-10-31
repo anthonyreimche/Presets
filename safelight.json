@@ -1,0 +1,14 @@
+{
+  "id": "safelight.presets",
+  "name": "Presets",
+  "version": "1.0.0",
+  "description": "Save and apply develop presets.",
+  "author": "Anthony Reimche",
+  "main": "dist/index.js",
+  "license": "GPL-3.0-only",
+  "categories": ["preset"],
+  "keywords": ["presets", "looks", "import", "export", "develop"],
+  "repository": "anthonyreimche/Presets",
+  "worksWith": ["anthonyreimche/Develop"],
+  "minAppVersion": "3.2.0"
+}
