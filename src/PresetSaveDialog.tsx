@@ -34,7 +34,7 @@ export interface PresetSaveDialogProps {
 /** Save Preset dialog: name + group + a checklist of which adjustments to keep,
  *  so a preset can carry as little as a single slider. Changed global
  *  adjustments are pre-checked; per-image edits (crop, retouch, spatial
- *  extension tools) are offered only under "Show all". Modeled on the app's
+ *  extension tools) are offered only under "Show all". Modelled on the app's
  *  modal pattern. */
 export function PresetSaveDialog({
   params,

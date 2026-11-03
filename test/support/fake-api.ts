@@ -217,7 +217,12 @@ export function fakeApi({ fields = scalarFields }: RigOptions = {}): Rig {
       const extension = lower.match(/\.[^.]+$/)?.[0] ?? "";
       return extension === ".json" ? { status: "unreadable" } : { status: "no-importer", extension };
     }
-    const result = await parsers.get(importer.id)?.(file);
+    let result: Awaited<ReturnType<ImporterParse>> | undefined;
+    try {
+      result = await parsers.get(importer.id)?.(file);
+    } catch (e) {
+      return { status: "failed", reason: e instanceof Error ? e.message : String(e) };
+    }
     if (!result || Object.keys(result.params).length === 0) return { status: "no-settings" };
     return { status: "imported", preset: { name: result.name, params: result.params } };
   }

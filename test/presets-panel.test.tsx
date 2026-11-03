@@ -104,6 +104,20 @@ describe("PresetsPanel import feedback", () => {
     expect(rig.presets.getState().presets).toEqual([]);
   });
 
+  it("says why when the importer fails reading the file, saving nothing", async () => {
+    const rig = mount();
+    act(() =>
+      rig.installImporter("test.lightroom.xmp", [".xmp"], async () => {
+        throw new Error("unexpected end of file");
+      }),
+    );
+    await importFile(rig, xmp());
+
+    await screen.findByText("Couldn't read “Warm Matte.xmp”: unexpected end of file");
+    expect(screen.queryByRole("button", { name: "Browse importers" })).toBeNull();
+    expect(rig.presets.getState().presets).toEqual([]);
+  });
+
   it("says so when a .json file isn't a Safelight preset", async () => {
     const rig = mount();
     await importFile(rig, new File(["{}"], "look.json", { type: "application/json" }));

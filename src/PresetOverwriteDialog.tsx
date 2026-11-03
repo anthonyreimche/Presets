@@ -13,7 +13,7 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Shown when saving a preset whose name already exists. Modeled on the app's
+/** Shown when saving a preset whose name already exists. Modelled on the app's
  *  modal pattern. */
 export function PresetOverwriteDialog({ name, onOverwrite, onSaveAsNew, onCancel }: Props) {
   React.useEffect(() => {

@@ -12,7 +12,7 @@ interface Props {
   onCancel: () => void;
 }
 
-/** Confirmation shown before deleting a preset. Modeled on the app's modal
+/** Confirmation shown before deleting a preset. Modelled on the app's modal
  *  pattern (see PresetOverwriteDialog). */
 export function PresetDeleteDialog({ name, onDelete, onCancel }: Props) {
   React.useEffect(() => {

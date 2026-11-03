@@ -44,6 +44,11 @@ function importNoticeFor(
         text: `Couldn't find any develop settings in “${fileName}”.`,
         offerStore: false,
       };
+    case "failed":
+      return {
+        text: `Couldn't read “${fileName}”: ${outcome.reason}`,
+        offerStore: false,
+      };
     case "unreadable":
       return {
         text: `“${fileName}” isn't a Safelight preset this version can read.`,
