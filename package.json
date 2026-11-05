@@ -1,7 +1,7 @@
 {
   "name": "safelight-presets",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Presets extension for Safelight: save, apply, import and export develop presets.",
   "type": "module",
   "scripts": {

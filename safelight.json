@@ -1,7 +1,7 @@
 {
   "id": "safelight.presets",
   "name": "Presets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Save and apply develop presets.",
   "author": "Anthony Reimche",
   "main": "dist/index.js",

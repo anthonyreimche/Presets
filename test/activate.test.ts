@@ -1,6 +1,6 @@
 // What activate() registers: the Presets panel under core's old panel id, title
 // and dock spot (so saved layouts keep it), and the stylesheet that gives the
-// panel, its dialogs and its tooltip core's look.
+// panel, its dialogues and its tooltip core's look.
 
 import { describe, expect, it } from "vitest";
 import { PresetsPanel } from "../src/PresetsPanel";

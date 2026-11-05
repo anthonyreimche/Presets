@@ -57,8 +57,8 @@ function importNoticeFor(
   }
 }
 
-// The Save and Update dialogs capture the live edit. Only this wrapper subscribes
-// to it, and it is mounted only while a dialog is open.
+// The Save and Update dialogues capture the live edit. Only this wrapper subscribes
+// to it, and it is mounted only while a dialogue is open.
 function LivePresetSaveDialog(props: Omit<PresetSaveDialogProps, "params" | "paramBag">) {
   const params = api.stores.useDevelopStore((s) => s.params);
   const paramBag = api.stores.useDevelopStore((s) => s.paramBag);
@@ -314,7 +314,7 @@ export function PresetsPanel() {
         />
       )}
 
-      {/* "Update with current settings": same dialog as Save, but preloaded with
+      {/* "Update with current settings": same dialogue as Save, but preloaded with
           the preset's name/group as a confirmation, writing back to the same
           preset id (with the current live params). */}
       {updating && (
@@ -325,7 +325,7 @@ export function PresetsPanel() {
           saveLabel="Update preset"
           onSave={(result) => {
             updatePreset(updating.id, result.params, result.group, result.paramBag);
-            // A rename in this dialog is honoured only when it doesn't collide
+            // A rename in this dialogue is honoured only when it doesn't collide
             // with a different preset; renamePreset trims and ignores empties.
             const collides = presets.some(
               (p) => p.id !== updating.id && p.name.toLowerCase() === result.name.toLowerCase(),

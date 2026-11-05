@@ -31,7 +31,7 @@ export interface PresetSaveDialogProps {
   onCancel: () => void;
 }
 
-/** Save Preset dialog: name + group + a checklist of which adjustments to keep,
+/** Save Preset dialogue: name + group + a checklist of which adjustments to keep,
  *  so a preset can carry as little as a single slider. Changed global
  *  adjustments are pre-checked; per-image edits (crop, retouch, spatial
  *  extension tools) are offered only under "Show all". Modelled on the app's

@@ -282,7 +282,7 @@ describe("PresetsPanel saving", () => {
     expect(rig.presets.getState().presets.map((p) => p.name)).toEqual(["Bright", "Bright 2", "Bright 3"]);
   });
 
-  it("closes the clash dialog on Escape", () => {
+  it("closes the clash dialogue on Escape", () => {
     const rig = mount([preset("p1", "Bright")]);
     editLive(rig);
     saveAs("Bright");

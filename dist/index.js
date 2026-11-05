@@ -407,6 +407,10 @@ function T(e, t) {
 			text: `Couldn't find any develop settings in “${t}”.`,
 			offerStore: !1
 		};
+		case "failed": return {
+			text: `Couldn't read “${t}”: ${e.reason}`,
+			offerStore: !1
+		};
 		case "unreadable": return {
 			text: `“${t}” isn't a Safelight preset this version can read.`,
 			offerStore: !1

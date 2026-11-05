@@ -125,7 +125,7 @@ export interface Rig {
 }
 
 export interface RigOptions {
-  /** What the Save dialog lists; defaults to one field per scalar. */
+  /** What the Save dialogue lists; defaults to one field per scalar. */
   fields?: (params: DevelopParams, paramBag: ParamBag) => PresetField[];
 }
 

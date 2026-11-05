@@ -34,7 +34,7 @@ export interface DevelopParams {
 export type ParamBag = Record<string, unknown>;
 
 export interface DevelopStoreState {
-  /** The open photo's catalog id, null with none open. */
+  /** The open photo's catalogue id, null with none open. */
   photoId: string | null;
   params: DevelopParams;
   /** Extension-stage params, keyed by qualified key. */
@@ -116,7 +116,7 @@ export interface PresetDiff {
   value: string;
 }
 
-/** One adjustment the Save dialog offers. */
+/** One adjustment the Save dialogue offers. */
 export interface PresetField {
   id: string;
   label: string;

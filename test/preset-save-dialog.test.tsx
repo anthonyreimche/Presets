@@ -1,4 +1,4 @@
-// The Save dialog lists what core's preset fields offer and saves the checked
+// The Save dialogue lists what core's preset fields offer and saves the checked
 // ones: changed global fields pre-checked, per-image fields only under "Show
 // all", and a display transform's settings carried with its field (a setting
 // the photo never moved saved as its default, so the preset resets a tuned

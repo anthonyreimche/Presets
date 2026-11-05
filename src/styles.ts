@@ -3,7 +3,7 @@
 // attribution-preservation term (GPL v3 §7b) — see LICENSE. This notice must
 // be preserved in derived versions.
 
-// The look core gave the Presets panel, its dialogs and its tooltip with
+// The look core gave the Presets panel, its dialogues and its tooltip with
 // Tailwind utilities, as plain CSS (the app's Tailwind build never scans an
 // extension). `:where()` drops every rule to zero specificity, so a stylesheet
 // that restyles buttons or inputs wins over them as it wins over core's
