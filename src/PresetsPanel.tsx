@@ -3,7 +3,6 @@
 // attribution-preservation term (GPL v3 §7b) — see LICENSE. This notice must
 // be preserved in derived versions.
 
-import { PresetDeleteDialog } from "./PresetDeleteDialog";
 import { PresetMoveDialog } from "./PresetMoveDialog";
 import { PresetOverwriteDialog } from "./PresetOverwriteDialog";
 import { PresetRenameDialog } from "./PresetRenameDialog";
@@ -13,6 +12,9 @@ import { nextAvailableName, withoutProcessVersion } from "./preset-helpers";
 import { React, api } from "./rt";
 import type { DevelopParams, ParamBag, Preset, PresetImportOutcome } from "./safelight";
 import { cls } from "./styles";
+
+/** The toolbar's three buttons share its width. */
+const TOOL = { flex: 1 } as const;
 
 interface PendingSave {
   name: string;
@@ -67,6 +69,7 @@ function LivePresetSaveDialog(props: Omit<PresetSaveDialogProps, "params" | "par
 
 export function PresetsPanel() {
   const { Panel, ContextMenu } = api.components;
+  const { Button } = api.ui;
   const { useDevelopStore, useCatalogStore, usePresetsStore } = api.stores;
   const [hovered, setHovered] = React.useState<{ id: string; anchor: HTMLElement } | null>(null);
   const [saving, setSaving] = React.useState(false);
@@ -74,7 +77,6 @@ export function PresetsPanel() {
   const [renaming, setRenaming] = React.useState<Preset | null>(null);
   const [moving, setMoving] = React.useState<Preset | null>(null);
   const [menu, setMenu] = React.useState<{ preset: Preset; x: number; y: number } | null>(null);
-  const [confirmDelete, setConfirmDelete] = React.useState<Preset | null>(null);
   const [collision, setCollision] = React.useState<{ existingId: string; pending: PendingSave } | null>(null);
   const [collapsed, setCollapsed] = React.useState<Set<string>>(new Set());
   const [importNotice, setImportNotice] = React.useState<ImportNotice | null>(null);
@@ -131,6 +133,16 @@ export function PresetsPanel() {
   const deletePreset = (id: string) => {
     setPreviewParams(null);
     removePreset(id);
+  };
+
+  const confirmDelete = async (preset: Preset) => {
+    const ok = await api.ui.confirmDialog({
+      title: "Delete preset",
+      message: `Delete the preset “${preset.name}”? This can’t be undone.`,
+      confirmLabel: "Delete",
+      variant: "danger",
+    });
+    if (ok) deletePreset(preset.id);
   };
 
   const commitSave = (pending: PendingSave) => {
@@ -197,7 +209,7 @@ export function PresetsPanel() {
       >
         {preset.name}
       </button>
-      <button onClick={() => setConfirmDelete(preset)} className={cls.delete} title="Delete preset">
+      <button onClick={() => void confirmDelete(preset)} className={cls.delete} title="Delete preset">
         ✕
       </button>
       {hovered?.id === preset.id && (
@@ -216,15 +228,15 @@ export function PresetsPanel() {
   return (
     <Panel title="Presets" defaultOpen={false}>
       <div className={cls.toolbar}>
-        <button onClick={() => setSaving(true)} className={cls.save}>
+        <Button variant="secondary" size="sm" style={TOOL} onClick={() => setSaving(true)}>
           Save preset…
-        </button>
-        <button onClick={handleImport} className={cls.tool}>
+        </Button>
+        <Button variant="secondary" size="sm" style={TOOL} onClick={handleImport}>
           Import
-        </button>
-        <button onClick={exportLive} className={cls.tool}>
+        </Button>
+        <Button variant="secondary" size="sm" style={TOOL} onClick={exportLive}>
           Export
-        </button>
+        </Button>
       </div>
 
       {/* Kept mounted so the live region announces the first notice too. */}
@@ -296,7 +308,7 @@ export function PresetsPanel() {
                 api.presets.exportFile(menu.preset.name, menu.preset.params, menu.preset.group, menu.preset.paramBag),
             },
             "separator",
-            { label: "Delete", danger: true, onClick: () => setConfirmDelete(menu.preset) },
+            { label: "Delete", danger: true, onClick: () => void confirmDelete(menu.preset) },
           ]}
           onClose={() => setMenu(null)}
         />
@@ -362,17 +374,6 @@ export function PresetsPanel() {
             setMoving(null);
           }}
           onCancel={() => setMoving(null)}
-        />
-      )}
-
-      {confirmDelete && (
-        <PresetDeleteDialog
-          name={confirmDelete.name}
-          onDelete={() => {
-            deletePreset(confirmDelete.id);
-            setConfirmDelete(null);
-          }}
-          onCancel={() => setConfirmDelete(null)}
         />
       )}
 

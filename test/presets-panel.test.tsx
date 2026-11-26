@@ -56,6 +56,16 @@ describe("PresetsPanel", () => {
     expect(screen.getByRole("region", { name: "Presets" })).toBeTruthy();
   });
 
+  it("draws its toolbar with the kit's small secondary Buttons", () => {
+    mount();
+    const toolbar = [...document.querySelectorAll<HTMLButtonElement>(`.${cls.toolbar} button`)];
+    expect(toolbar.map((b) => [b.textContent, b.dataset.kit, b.dataset.variant, b.dataset.size])).toEqual([
+      ["Save preset…", "button", "secondary", "sm"],
+      ["Import", "button", "secondary", "sm"],
+      ["Export", "button", "secondary", "sm"],
+    ]);
+  });
+
   it("shows the toolbar and an empty-state line with no presets", () => {
     mount();
     expect([...document.querySelectorAll(`.${cls.toolbar} button`)].map((b) => b.textContent)).toEqual([
@@ -249,6 +259,38 @@ describe("PresetsPanel saving", () => {
     act(() => rig.develop.setState({ params: normalizeParams({ processVersion: 2, exposure: 1.2 }) }));
   }
 
+  it("draws every dialogue's actions with the kit's Buttons: primary to go ahead, secondary otherwise", () => {
+    const rig = mount([preset("a", "Warm")]);
+    const look = (name: string) => [button(name).dataset.kit, button(name).dataset.variant];
+    editLive(rig);
+    fireEvent.click(button("Save preset…"));
+    expect([look("Cancel"), look("Save preset")]).toEqual([
+      ["button", "secondary"],
+      ["button", "primary"],
+    ]);
+    fireEvent.click(button("Cancel"));
+    saveAs("Warm");
+    expect([look("Overwrite"), look("Save as new"), look("Cancel")]).toEqual([
+      ["button", "primary"],
+      ["button", "secondary"],
+      ["button", "secondary"],
+    ]);
+    fireEvent.click(button("Cancel"));
+    fireEvent.contextMenu(button("Warm"));
+    fireEvent.click(menuItem("Rename…"));
+    expect([look("Cancel"), look("Rename")]).toEqual([
+      ["button", "secondary"],
+      ["button", "primary"],
+    ]);
+    fireEvent.click(button("Cancel"));
+    fireEvent.contextMenu(button("Warm"));
+    fireEvent.click(menuItem("Move to group…"));
+    expect([look("Cancel"), look("Move")]).toEqual([
+      ["button", "secondary"],
+      ["button", "primary"],
+    ]);
+  });
+
   it("saves the live edit's checked adjustments as a new preset", () => {
     const rig = mount();
     editLive(rig);
@@ -286,8 +328,9 @@ describe("PresetsPanel saving", () => {
     const rig = mount([preset("p1", "Bright")]);
     editLive(rig);
     saveAs("Bright");
-    fireEvent.keyDown(window, { key: "Escape" });
+    act(() => rig.pressEscape());
     expect(screen.queryByRole("button", { name: "Overwrite" })).toBeNull();
+    expect(rig.escapeHandlers).toEqual([]);
   });
 });
 
@@ -369,16 +412,23 @@ describe("PresetsPanel row menu", () => {
     expect(rig.exports).toEqual([{ name: "Glow", params: { exposure: 0.5 }, group: "FX", paramBag: { "a.b.c": 1 } }]);
   });
 
-  it("deletes only after confirming, clearing any preview", () => {
+  it("deletes only after confirming in the app's own dialogue, clearing any preview", async () => {
     const rig = mount([preset("p1", "Bright")]);
     openMenu("Bright");
     fireEvent.click(menuItem("Delete"));
-    screen.getByText("Delete the preset “Bright”? This can’t be undone.");
-    fireEvent.click(button("Cancel"));
+    expect(rig.confirms.map((c) => c.options)).toEqual([
+      {
+        title: "Delete preset",
+        message: "Delete the preset “Bright”? This can’t be undone.",
+        confirmLabel: "Delete",
+        variant: "danger",
+      },
+    ]);
+    await act(async () => rig.confirms[0].resolve(false));
     expect(rig.presets.getState().presets).toHaveLength(1);
 
     fireEvent.click(screen.getByTitle("Delete preset"));
-    fireEvent.click(button("Delete"));
+    await act(async () => rig.confirms[1].resolve(true));
     expect(rig.presets.getState().presets).toEqual([]);
     expect(rig.previews.at(-1)?.params).toBeNull();
     screen.getByText("No saved presets");

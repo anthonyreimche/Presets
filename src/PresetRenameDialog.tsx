@@ -3,7 +3,7 @@
 // attribution-preservation term (GPL v3 §7b) — see LICENSE. This notice must
 // be preserved in derived versions.
 
-import { React } from "./rt";
+import { React, api } from "./rt";
 import { cls } from "./styles";
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 
 /** Single-field modal for renaming a preset. Mirrors the app's modal pattern. */
 export function PresetRenameDialog({ initialName, validate, onRename, onCancel }: Props) {
+  const { Button } = api.ui;
   const [name, setName] = React.useState(initialName);
   const inputRef = React.useRef<HTMLInputElement>(null);
   React.useEffect(() => inputRef.current?.select(), []);
@@ -53,12 +54,12 @@ export function PresetRenameDialog({ initialName, validate, onRename, onCancel }
           {error && <div className={cls.error}>{error}</div>}
         </div>
         <div className={`${cls.actions} ${cls.actionsBar}`}>
-          <button className={`${cls.button} ${cls.secondary}`} onClick={onCancel}>
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
-          <button disabled={!canSave} className={`${cls.button} ${cls.primary}`} onClick={submit}>
+          </Button>
+          <Button variant="primary" disabled={!canSave} onClick={submit}>
             Rename
-          </button>
+          </Button>
         </div>
       </div>
     </div>

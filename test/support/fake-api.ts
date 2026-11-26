@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import { create } from "zustand";
 import type {
   CatalogStoreState,
+  ConfirmDialogOptions,
   ContextMenuProps,
   DevelopParams,
   DevelopStoreState,
@@ -100,6 +101,11 @@ export interface ExportCall {
   paramBag?: ParamBag;
 }
 
+export interface PendingConfirm {
+  options: ConfirmDialogOptions;
+  resolve(confirmed: boolean): void;
+}
+
 export interface Rig {
   api: SafelightAPI;
   develop: StoreApi<DevelopStoreState & { previewParamBag: ParamBag | null }>;
@@ -115,6 +121,12 @@ export interface Rig {
   /** Every setPreviewParams call, as passed. */
   previews: { params: Partial<DevelopParams> | null; paramBag?: ParamBag | null }[];
   exports: ExportCall[];
+  /** confirmDialog requests the panel made, waiting for the test to answer. */
+  confirms: PendingConfirm[];
+  /** Handlers registered through ui.onEscape, newest last. */
+  escapeHandlers: (() => void)[];
+  /** Escape goes to the newest taker, as core does. */
+  pressEscape(): void;
   /** The `accept` string of every file picker the panel opened. */
   pickerAccepts: string[];
   /** Store categories the Extensions window was opened on. */
@@ -136,6 +148,8 @@ export function fakeApi({ fields = scalarFields }: RigOptions = {}): Rig {
   const applied: Rig["applied"] = [];
   const previews: Rig["previews"] = [];
   const exports: ExportCall[] = [];
+  const confirms: PendingConfirm[] = [];
+  const escapeHandlers: (() => void)[] = [];
   const pickerAccepts: string[] = [];
   const storeOpened: (string | undefined)[] = [];
   const parsers = new Map<string, ImporterParse>();
@@ -262,7 +276,26 @@ export function fakeApi({ fields = scalarFields }: RigOptions = {}): Rig {
     react: React,
     registerPanel: (c) => void panels.push(c),
     registerStylesheet: (c) => void stylesheets.push(c),
-    ui: { tokens: TOKENS },
+    ui: {
+      tokens: TOKENS,
+      // Core's kit Button, standing in with its look as data so a test can
+      // tell it from a hand-rolled one.
+      Button: ({ variant = "secondary", size = "md", active = false, full = false, ...rest }) =>
+        React.createElement("button", {
+          type: "button",
+          "data-kit": "button",
+          "data-variant": variant,
+          "data-size": size,
+          "data-active": String(active),
+          "data-full": String(full),
+          ...rest,
+        }),
+      confirmDialog: (options) => new Promise<boolean>((resolve) => void confirms.push({ options, resolve })),
+      onEscape(handler) {
+        escapeHandlers.push(handler);
+        return () => void escapeHandlers.splice(escapeHandlers.indexOf(handler), 1);
+      },
+    },
     components: { Panel: FakePanel, ContextMenu: FakeContextMenu },
     reactDom: { createPortal },
     stores: { useDevelopStore: develop, useCatalogStore: catalog, useSettings: settings, usePresetsStore: presets },
@@ -297,6 +330,9 @@ export function fakeApi({ fields = scalarFields }: RigOptions = {}): Rig {
     applied,
     previews,
     exports,
+    confirms,
+    escapeHandlers,
+    pressEscape: () => escapeHandlers.at(-1)?.(),
     pickerAccepts,
     storeOpened,
     choose: (file) => {

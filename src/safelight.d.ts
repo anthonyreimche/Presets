@@ -10,7 +10,7 @@
 // standalone bundles, so the host's source is not on the type path; React
 // types come from @types/react (dev only).
 
-import type { ComponentType, ReactNode, ReactPortal } from "react";
+import type { ButtonHTMLAttributes, ComponentType, ReactNode, ReactPortal } from "react";
 
 export interface StoreApi<T> {
   (): T;
@@ -149,6 +149,8 @@ export interface PanelContribution {
   title: string;
   component: ComponentType;
   defaultDock?: PanelDockDefault;
+  /** The modules the panel may be docked in; omitted, every module (Safelight 3.2.8). */
+  modules?: readonly string[];
 }
 
 /** A stylesheet applied to every app window after the core styles. Extension
@@ -160,6 +162,15 @@ export interface StylesheetContribution {
 }
 
 /** The theme's CSS variables as `var(--color-…)` strings. */
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "ghost" | "danger";
+  size?: "sm" | "md";
+  /** Render as the selected/active state (accent fill), overriding the variant. */
+  active?: boolean;
+  /** Stretch to the container width. */
+  full?: boolean;
+}
+
 export interface UiTokens {
   readonly surface1: string;
   readonly surface2: string;
@@ -199,13 +210,31 @@ export interface ContextMenuProps {
   onClose: () => void;
 }
 
+export interface ConfirmDialogOptions {
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  /** "danger" paints the confirm button in the destructive red and opens with
+   *  Cancel focused. */
+  variant?: "default" | "danger";
+}
+
 export interface SafelightAPI {
   version: 1;
   extensionId: string;
   react: typeof import("react");
   registerPanel(c: PanelContribution): void;
   registerStylesheet(c: StylesheetContribution): void;
-  ui: { tokens: UiTokens };
+  ui: {
+    tokens: UiTokens;
+    /** Core's button, in the app's look. */
+    Button: ComponentType<ButtonProps>;
+    /** Ask in the app's own dialogue card; resolves true on confirm. */
+    confirmDialog(options: ConfirmDialogOptions): Promise<boolean>;
+    /** Takes the Escape key while something of yours is open; returns a release function. */
+    onEscape(handler: () => void): () => void;
+  };
   components: {
     /** Core's collapsible section; inside a dock panel of the same title it
      *  renders the content alone. */

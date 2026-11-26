@@ -3,7 +3,7 @@
 // attribution-preservation term (GPL v3 §7b) — see LICENSE. This notice must
 // be preserved in derived versions.
 
-import { React } from "./rt";
+import { React, api } from "./rt";
 import { cls } from "./styles";
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
 /** Single-field modal for moving a preset to another group. Typing a new name
  *  creates the group; clearing the field (or "Ungrouped") removes the grouping. */
 export function PresetMoveDialog({ initialGroup, groups, onMove, onCancel }: Props) {
+  const { Button } = api.ui;
   const [group, setGroup] = React.useState(initialGroup ?? "");
   const inputRef = React.useRef<HTMLInputElement>(null);
   React.useEffect(() => inputRef.current?.select(), []);
@@ -55,12 +56,12 @@ export function PresetMoveDialog({ initialGroup, groups, onMove, onCancel }: Pro
           </datalist>
         </div>
         <div className={`${cls.actions} ${cls.actionsBar}`}>
-          <button className={`${cls.button} ${cls.secondary}`} onClick={onCancel}>
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
-          <button className={`${cls.button} ${cls.primary}`} onClick={submit}>
+          </Button>
+          <Button variant="primary" onClick={submit}>
             Move
-          </button>
+          </Button>
         </div>
       </div>
     </div>

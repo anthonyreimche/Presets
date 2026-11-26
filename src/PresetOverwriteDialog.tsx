@@ -3,7 +3,7 @@
 // attribution-preservation term (GPL v3 §7b) — see LICENSE. This notice must
 // be preserved in derived versions.
 
-import { React } from "./rt";
+import { React, api } from "./rt";
 import { cls } from "./styles";
 
 interface Props {
@@ -16,13 +16,8 @@ interface Props {
 /** Shown when saving a preset whose name already exists. Modelled on the app's
  *  modal pattern. */
 export function PresetOverwriteDialog({ name, onOverwrite, onSaveAsNew, onCancel }: Props) {
-  React.useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [onCancel]);
+  const { Button } = api.ui;
+  React.useEffect(() => api.ui.onEscape(onCancel), [onCancel]);
 
   return (
     <div
@@ -34,15 +29,15 @@ export function PresetOverwriteDialog({ name, onOverwrite, onSaveAsNew, onCancel
       <div className={`${cls.card} ${cls.cardPadded}`}>
         <p className={cls.message}>A preset named &ldquo;{name}&rdquo; already exists.</p>
         <div className={cls.actions}>
-          <button className={`${cls.button} ${cls.primary}`} onClick={onOverwrite}>
+          <Button variant="primary" onClick={onOverwrite}>
             Overwrite
-          </button>
-          <button className={`${cls.button} ${cls.secondary} ${cls.secondaryLift}`} onClick={onSaveAsNew}>
+          </Button>
+          <Button variant="secondary" onClick={onSaveAsNew}>
             Save as new
-          </button>
-          <button className={`${cls.button} ${cls.secondary}`} onClick={onCancel}>
+          </Button>
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>

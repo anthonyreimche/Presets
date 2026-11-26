@@ -23,5 +23,6 @@ export function activate(host: SafelightAPI): void {
     title: "Presets",
     component: PresetsPanel,
     defaultDock: { module: "develop", direction: "left", order: 2, width: 240, height: 200 },
+    modules: ["develop"],
   });
 }

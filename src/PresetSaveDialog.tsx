@@ -46,6 +46,7 @@ export function PresetSaveDialog({
   onSave,
   onCancel,
 }: PresetSaveDialogProps) {
+  const { Button } = api.ui;
   const fields = React.useMemo(() => api.presets.fields(params, paramBag), [params, paramBag]);
   const [name, setName] = React.useState(initialName ?? "");
   const [group, setGroup] = React.useState(initialGroup ?? "");
@@ -140,12 +141,12 @@ export function PresetSaveDialog({
         </div>
 
         <div className={`${cls.actions} ${cls.actionsBar}`}>
-          <button className={`${cls.button} ${cls.secondary}`} onClick={onCancel}>
+          <Button variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
-          <button disabled={!canSave} className={`${cls.button} ${cls.primary}`} onClick={submit}>
+          </Button>
+          <Button variant="primary" disabled={!canSave} onClick={submit}>
             {saveLabel}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

@@ -16,8 +16,6 @@ const P = "safelight-presets";
 
 export const cls = {
   toolbar: `${P}-toolbar`,
-  save: `${P}-save`,
-  tool: `${P}-tool`,
   notice: `${P}-notice`,
   noticeBody: `${P}-notice-body`,
   noticeLink: `${P}-notice-link`,
@@ -44,11 +42,6 @@ export const cls = {
   error: `${P}-error`,
   actions: `${P}-actions`,
   actionsBar: `${P}-actions-bar`,
-  button: `${P}-button`,
-  primary: `${P}-primary`,
-  danger: `${P}-danger`,
-  secondary: `${P}-secondary`,
-  secondaryLift: `${P}-secondary-lift`,
   include: `${P}-include`,
   showAll: `${P}-show-all`,
   fieldList: `${P}-field-list`,
@@ -69,8 +62,8 @@ export const cls = {
 const SHADOW_XL = "0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a";
 const TRUNCATE = "overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
 
-const TEXT_10 = [cls.tool, cls.notice, cls.empty, cls.groupHeader, cls.dialogHeading, cls.error, cls.include, cls.fieldTag];
-const TEXT_11 = [cls.save, cls.row, cls.button, cls.fieldEmpty, cls.field, cls.tooltip];
+const TEXT_10 = [cls.notice, cls.empty, cls.groupHeader, cls.dialogHeading, cls.error, cls.include, cls.fieldTag];
+const TEXT_11 = [cls.row, cls.fieldEmpty, cls.field, cls.tooltip];
 const UPPERCASE = [cls.groupHeader, cls.dialogHeading, cls.include];
 
 const any = (classes: readonly string[]) => classes.map((c) => `html.sl-larger-text .${c}`).join(", ");
@@ -81,8 +74,6 @@ const any = (classes: readonly string[]) => classes.map((c) => `html.sl-larger-t
 export function presetsCss(t: UiTokens): string {
   return `
 :where(.${cls.toolbar}) { margin-bottom: 0.5rem; display: flex; gap: 0.25rem; }
-:where(.${cls.save}) { flex: 1; border-radius: 0.25rem; background-color: ${t.surface3}; padding: 0.25rem 0.5rem; font-size: 11px; color: ${t.textSecondary}; }
-:where(.${cls.tool}) { flex: 1; border-radius: 0.25rem; background-color: ${t.surface2}; padding: 0.25rem 0.5rem; font-size: 10px; color: ${t.textSecondary}; }
 :where(.${cls.notice}) { margin-bottom: 0.5rem; display: flex; align-items: flex-start; gap: 0.375rem; border-radius: 0.25rem; background-color: ${t.surface2}; padding: 0.375rem 0.5rem; font-size: 10px; line-height: 1.375; color: ${t.textSecondary}; }
 :where(.${cls.noticeBody}) { min-width: 0; flex: 1; }
 :where(.${cls.noticeLink}) { margin-top: 0.25rem; color: ${t.sliderFill}; }
@@ -113,10 +104,6 @@ export function presetsCss(t: UiTokens): string {
 :where(.${cls.error}) { font-size: 10px; color: ${t.labelRed}; }
 :where(.${cls.actions}) { display: flex; justify-content: flex-end; gap: 0.5rem; }
 :where(.${cls.actionsBar}) { border-top: 1px solid ${t.border}; padding: 0.75rem; }
-:where(.${cls.button}) { border-radius: 0.25rem; padding: 0.25rem 0.75rem; font-size: 11px; }
-:where(.${cls.primary}) { background-color: ${t.accent}; font-weight: 500; color: ${t.white}; }
-:where(.${cls.danger}) { background-color: ${t.labelRed}; font-weight: 500; color: ${t.white}; }
-:where(.${cls.secondary}) { background-color: ${t.surface2}; color: ${t.textSecondary}; }
 :where(.${cls.include}) { display: flex; align-items: center; justify-content: space-between; padding: 0.375rem 0.75rem; font-size: 10px; text-transform: uppercase; letter-spacing: 0.025em; color: inherit; }
 :where(.${cls.showAll}) { display: flex; cursor: pointer; align-items: center; gap: 0.25rem; text-transform: none; }
 :where(.${cls.fieldList}) { min-height: 0; flex: 1; overflow-y: auto; padding: 0 0.5rem 0.5rem; }
@@ -135,8 +122,6 @@ export function presetsCss(t: UiTokens): string {
 :where(.${cls.tipValue}) { flex-shrink: 0; font-variant-numeric: tabular-nums; color: inherit; }
 
 @media (hover: hover) {
-  :where(.${cls.save}:hover) { background-color: ${t.surface4}; color: ${t.textPrimary}; }
-  :where(.${cls.tool}:hover) { background-color: ${t.surface3}; color: ${t.textPrimary}; }
   :where(.${cls.noticeLink}:hover) { text-decoration-line: underline; }
   :where(.${cls.dismiss}:hover) { color: ${t.textPrimary}; }
   :where(.${cls.groupHeader}:hover) { color: ${t.textSecondary}; }
@@ -144,12 +129,8 @@ export function presetsCss(t: UiTokens): string {
   :where(.${cls.apply}:hover) { color: ${t.textPrimary}; }
   :where(.${cls.delete}:hover) { color: ${t.labelRed}; }
   :where(.${cls.row}:hover .${cls.delete}) { opacity: 1; }
-  :where(.${cls.primary}:hover, .${cls.danger}:hover) { opacity: 0.9; }
-  :where(.${cls.secondary}:hover) { background-color: ${t.surface3}; }
-  :where(.${cls.secondaryLift}:hover) { color: inherit; }
   :where(.${cls.field}:hover) { background-color: ${t.surface2}; }
 }
-:where(.${cls.primary}:disabled) { cursor: not-allowed; opacity: 0.4; }
 
 ${any(TEXT_10)} { font-size: 12px !important; }
 ${any(TEXT_11)} { font-size: 13px !important; line-height: 1.45 !important; }
